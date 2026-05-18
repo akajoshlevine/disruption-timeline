@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Panic and the Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300;400;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #052340;
+    --magenta: #ec2b8c;
+    --blue:    #333399;
+    --orange:  #ff6600;
+    --lime:    #7fdc0f;
+    --bg:      #eeeeee;
+    --white:   #ffffff;
+    --rule:    #d0ccc8;
+    --muted:   #6b7280;
+    --panic-fill: rgba(236, 43, 140, 0.09);
+    --panic-border: rgba(236, 43, 140, 0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--navy);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── Fullscreen toggle ── */
+  .fs-btn {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    border: none;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .fs-btn:hover { color: var(--white); background: var(--magenta); }
+
+  /* ── Header ── */
+  header {
+    background: var(--white);
+    padding: 52px 72px 40px;
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .eyebrow {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: clamp(40px, 5.5vw, 68px);
+    line-height: 0.95;
+    font-weight: 700;
+    color: var(--navy);
+    max-width: 720px;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--magenta);
+  }
+
+  .subtitle {
+    margin-top: 18px;
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.65;
+  }
+
+  .legend {
+    display: flex;
+    gap: 28px;
+    margin-top: 26px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .l-swatch {
+    width: 28px; height: 8px;
+    border-radius: 2px;
+  }
+
+  .l-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--navy);
+  }
+
+  /* ── Timeline ── */
+  .tl-outer {
+    padding: 44px 72px 0;
+    overflow-x: auto;
+    background: var(--white);
+  }
+
+  .tl-scroll { min-width: 960px; position: relative; }
+
+  .tl-chart { position: relative; height: 480px; }
+
+  .tl-bg { position: absolute; inset: 0; pointer-events: none; }
+
+  .tl-col {
+    position: absolute;
+    top: 0; bottom: 0;
+  }
+  .tl-col.panic { background: var(--panic-fill); }
+
+  .tl-axis {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--navy);
+    opacity: 0.2;
+  }
+
+  .tl-dot {
+    position: absolute;
+    transform: translate(-50%, 50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--white);
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.18s;
+  }
+  .tl-dot:hover { transform: translate(-50%, 50%) scale(1.5); }
+  .tl-dot.active {
+    background: var(--magenta);
+    border-color: var(--white);
+  }
+
+  .tl-card {
+    position: absolute;
+    transform: translateX(-50%);
+    width: 120px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 8px 12px;
+    z-index: 8;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .tl-card:hover {
+    border-color: var(--navy);
+    box-shadow: 2px 2px 0 var(--navy);
+    transform: translateX(-50%) translate(-1px, -1px);
+  }
+  .tl-card.active {
+    border-color: var(--magenta);
+    box-shadow: 2px 2px 0 var(--magenta);
+    transform: translateX(-50%) translate(-1px, -1px);
+  }
+  .tl-card-title {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+  }
+
+  .tl-connector {
+    position: absolute;
+    width: 1px;
+    background: var(--rule);
+    z-index: 4;
+    transform: translateX(-50%);
+  }
+
+  .tl-year {
+    position: absolute;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    transform: translateX(-50%);
+  }
+
+  /* ── Detail Panel ── */
+  .detail {
+    margin: 0 72px;
+    border: 2px solid var(--navy);
+    background: var(--white);
+    display: none;
+    animation: fadeUp 0.22s cubic-bezier(.22,.61,.36,1);
+  }
+  .detail.open { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-header {
+    background: var(--navy);
+    padding: 28px 36px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .detail-header-left { flex: 1; }
+
+  .detail-year {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 6px;
+  }
+
+  .detail-title {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.05;
+  }
+
+  .detail-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    margin-top: 5px;
+  }
+
+  .detail-close {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    flex-shrink: 0;
+    padding-top: 4px;
+    transition: color 0.15s;
+  }
+  .detail-close:hover { color: var(--white); }
+
+  .detail-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .detail-section {
+    padding: 26px 30px;
+    border-right: 1px solid var(--rule);
+  }
+  .detail-section:last-child { border-right: none; }
+
+  .detail-section h4 {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid;
+  }
+
+  .h4-disruption { color: var(--blue);    border-color: var(--blue); }
+  .h4-panic      { color: var(--magenta); border-color: var(--magenta); }
+  .h4-progress   { color: var(--muted);   border-color: var(--rule); }
+
+  .detail-section p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .detail-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+  .panic-tag   { background: var(--magenta); color: white; }
+  .unknown-tag { background: var(--navy);    color: white; }
+
+  .detail-analogy {
+    padding: 22px 30px;
+    background: #f0f4f8;
+    border-top: 1px solid var(--rule);
+  }
+
+  .detail-analogy h4 {
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .detail-analogy p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--muted);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    margin-top: 0;
+    padding: 18px 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  footer span.highlight { color: var(--magenta); }
+
+  .instruction {
+    text-align: center;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 72px 22px;
+    background: var(--white);
+  }
+
+  @media (max-width: 800px) {
+    header, .tl-outer, .instruction { padding-left: 24px; padding-right: 24px; }
+    .detail { margin: 0 24px; }
+    .detail-body { grid-template-columns: 1fr; }
+    .detail-section { border-right: none; border-bottom: 1px solid var(--rule); }
+    footer { padding-left: 24px; padding-right: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+
+<header>
+  <div class="eyebrow">The Job Sh*t Show ⋅ Research</div>
+  <h1>The <em>Panic</em> +<br>the Progress</h1>
+  <p class="subtitle">Every major technology disruption produced the same sequence — fear of what would be lost, then adaptation to what was possible. A record from Gutenberg to GPT.</p>
+  <div class="legend">
+    <div class="legend-item">
+      <div class="l-swatch" style="background:var(--panic-fill); border: 1px solid var(--panic-border);"></div>
+      Panic / resistance
+    </div>
+    <div class="legend-item">
+      <div class="l-dot"></div>
+      Disruption arrives
+    </div>
+  </div>
+</header>
+
+<div class="instruction">Click any event to read the full story</div>
+
+<div class="tl-outer">
+  <div class="tl-scroll">
+    <div class="tl-chart" id="tlChart">
+      <div class="tl-bg" id="tlBg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="detail" id="detail"></div>
+
+<footer>
+  <span>The Job Sh*t Show</span>
+  <span class="highlight">joshlevine.substack.com</span>
+</footer>
+
+<script>
+const events = [
+  {
+    year: 1764,
+    title: "Spinning Jenny",
+    short: "Industrial textile machinery",
+    panicStart: 1764, panicEnd: 1820,
+    disruption: "James Hargreaves' Spinning Jenny — and the broader mechanization of textile production — collapsed the cottage industry that had employed millions of British hand-spinners and weavers.",
+    panic: "The Luddite movement (1811–1816) was the most organized anti-technology resistance in history. Workers broke into mills and destroyed machinery. The British government deployed more troops against Luddites than against Napoleon at the time.",
+    panicDur: "~60 years of resistance; Luddite peak 1811–1816",
+    progress: "The factory system created entirely new categories of work. Britain's textile output grew 50x. Urban industrial economies replaced agrarian ones. Child labor laws, unions, and labor rights followed — eventually.",
+    progressDur: "New normal by ~1840",
+    analogy: "'Luddite' became a slur. But the Luddites weren't anti-technology — they were pro-worker. The debate today about AI and jobs is the same argument with different vocabulary. And the same people lose in the short run."
+  },
+  {
+    year: 1839,
+    title: "Photography",
+    short: "Daguerre's public announcement",
+    panicStart: 1839, panicEnd: 1870,
+    disruption: "On August 19, 1839, the French government released the daguerreotype process to the world for free — and within weeks, portrait studios were opening across Europe and America. A sitting that once required a painter and weeks of work could now be done in minutes for a fraction of the cost.",
+    panic: "Portrait painters and miniaturists lost their livelihoods almost overnight — one French painter called it 'the death of art.' But the panic ran deeper than economics. Philosophers and clergy debated whether photographs captured the soul. Baudelaire called it art's 'mortal enemy.' Courts wrestled with whether a photograph could be trusted as evidence.",
+    panicDur: "~30 years of craft displacement + ongoing truth anxiety",
+    progress: "Photography didn't kill art — it freed it. Painters abandoned photorealism and invented Impressionism. New professions emerged: photojournalists, portrait photographers, darkroom technicians, photo editors. The question of whether images tell the truth never fully resolved — it just became normal to live with the uncertainty.",
+    progressDur: "New normal by ~1870",
+    analogy: "The most direct ancestor of the AI moment. When photography removed the constraint that had defined painting — the obligation to capture reality — painters didn't disappear. They invented Impressionism, then Cubism, then Abstract Expressionism. The machine took the mimicry. What was left was more human, not less."
+  },
+  {
+    year: 1829,
+    title: "Steam Railroad",
+    short: "Liverpool–Manchester Railway",
+    panicStart: 1829, panicEnd: 1862,
+    disruption: "The first intercity passenger railway collapsed travel times from days to hours, destroyed the coaching and canal industries, and began restructuring where people could live and work.",
+    panic: "Canal companies lobbied furiously against rail. Medical experts warned traveling at 30mph would cause passengers' lungs to collapse. Farmers feared cows would stop giving milk near train lines. Clergy saw it as defying God's natural order.",
+    panicDur: "~30 years of resistance and adjustment",
+    progress: "Suburbs were born. National supply chains became possible. Agriculture industrialized. New jobs: engineers, conductors, station workers, sleeping car attendants. The railroad economy restructured entire nations.",
+    progressDur: "New normal by ~1870",
+    analogy: "The lung-collapse doctors were wrong on the facts but not entirely wrong about disruption. Every new infrastructure technology creates winners and losers by geography and class. The question is always who bears the cost."
+  },
+  {
+    year: 1882,
+    title: "Electricity",
+    short: "Grid power replaces gas lamps",
+    panicStart: 1882, panicEnd: 1912,
+    disruption: "Edison's commercial electric grid (1882) made gaslight obsolete and began the electrification of industry, homes, and commerce — a transition that took nearly 50 years to complete.",
+    panic: "Gas companies lobbied to discredit electricity. Edison electrocuted animals publicly to prove AC power was dangerous. Early adopters were seen as reckless. Entire industries — gas fitting, lamp trimming, candle-making — fought the transition.",
+    panicDur: "~30 years of industry resistance",
+    progress: "The companies that won weren't the ones that replaced gas lamps with electric ones — they were the ones that redesigned their entire operations around electric power. Productivity exploded. Factory layouts, work shifts, and retail hours all changed.",
+    progressDur: "New normal by ~1930",
+    analogy: "Andrew Ng's 'AI is the new electricity' framing lives here. The real lesson: electrification took 50 years to fully restructure the economy. AI timelines may compress that — or may not. The restructuring, not the technology, is what takes time."
+  },
+  {
+    year: 1913,
+    title: "Assembly Line",
+    short: "Ford's moving assembly line",
+    panicStart: 1913, panicEnd: 1940,
+    disruption: "Ford's assembly line destroyed artisan manufacturing and replaced it with repetitive, deskilled labor — while simultaneously making products affordable to the workers who made them.",
+    panic: "Craft unions fought deskilling bitterly. The speed of the line caused physical and psychological breakdown — Chaplin's Modern Times captured the dehumanization. Early auto plants had 300–400% annual worker turnover. The $5 workday was Ford's response to that crisis.",
+    panicDur: "~25 years of labor conflict",
+    progress: "The $5 workday created the American middle class. Mass consumption became the engine of the economy. New industries: auto repair, gas stations, road construction, motels, suburbs. More people employed than before, but doing very different work.",
+    progressDur: "New normal by ~1950",
+    analogy: "The horse didn't adapt to the car. Coachmakers didn't either. But the jobs that replaced them employed more people for several decades. The question is always: who bears the transition cost, how long does it last, and does the new economy actually include you?"
+  },
+  {
+    year: 1950,
+    title: "The Computer",
+    short: "ENIAC and the computing era",
+    panicStart: 1950, panicEnd: 1980,
+    disruption: "ENIAC (1945) began the computing era. IBM mainframes in the 1950s–60s began automating clerical and accounting work at scale. The personal computer (1977) brought computation to individuals.",
+    panic: "Labor unions feared mass white-collar unemployment. The term 'automation anxiety' entered the mainstream in the 1960s. Congressional hearings were held. A presidential commission was formed. Norbert Wiener warned of machines displacing human cognition decades before it happened.",
+    panicDur: "~30 years of anxiety; peaked in 1960s",
+    progress: "Clerical jobs shrank but knowledge worker jobs exploded. IT departments, software engineers, database administrators, systems analysts — none of these job categories existed before. The information economy was born. Jevons Paradox in action: efficiency created demand.",
+    progressDur: "New normal by ~1985",
+    analogy: "The VisiCalc / spreadsheet story lives here. Computers didn't eliminate accountants — they created demand for financial analysis that had been unaffordable before. Whether AI follows the same pattern is the central question of the next decade."
+  },
+  {
+    year: 1994,
+    title: "The Internet",
+    short: "World Wide Web goes public",
+    panicStart: 1994, panicEnd: 2005,
+    disruption: "The public web (1991–1994) destroyed entire industries — newspapers, travel agents, video rental, record stores, classified advertising — while creating new ones at scale. It was the most compressed disruption in the pre-AI era.",
+    panic: "The dotcom bubble (1995–2001) and crash. Newspapers declared they would never give away content for free, then did. The music industry sued Napster. Retailers ignored e-commerce until Amazon proved the model. Panic took the form of denial as much as resistance.",
+    panicDur: "~10 years including bubble and bust",
+    progress: "E-commerce, social media, streaming, the gig economy, cloud computing, smartphones. New jobs dwarfed old ones by count — but not always by wages, benefits, or stability. The internet created enormous value and distributed very little of it.",
+    progressDur: "New normal by ~2010",
+    analogy: "The internet is the most direct predecessor to AI's disruption. Same pattern: breathless optimism, speculative bubble, crash, then quiet restructuring that actually changed everything. The crash is what everyone remembers. The restructuring is what matters."
+  },
+  {
+    year: 2007,
+    title: "Smartphone",
+    short: "iPhone and the mobile era",
+    panicStart: 2007, panicEnd: 2015,
+    disruption: "The iPhone (2007) collapsed point-and-shoot cameras, GPS devices, MP3 players, alarm clocks, watches, and newspapers into a single device — and created the app economy and the gig economy in the same stroke.",
+    panic: "Nokia and BlackBerry dismissed touchscreens as gimmicks. Taxi and hotel industries ignored Uber and Airbnb until they were disrupted. Retail missed mobile commerce. The mental health and attention economy harms emerged years after adoption, not before.",
+    panicDur: "~8 years of industry denial and disruption",
+    progress: "The app economy created millions of jobs. Platform businesses scaled globally at near-zero marginal cost. But gig work replaced employment. The Uberification of labor — flexibility as cover for removing benefits, predictable income, and worker protections — began here.",
+    progressDur: "New normal by ~2018",
+    analogy: "Hank Wethington's Uberification argument: what sounds like freedom — the portfolio career, the flexible schedule — is actually a race to the bottom. No benefits, unpredictable income, assets you own depreciating while you work. AI is accelerating that model into white-collar work."
+  },
+  {
+    year: 2022,
+    title: "Generative AI",
+    short: "ChatGPT and the LLM era",
+    panicStart: 2022, panicEnd: 2032,
+    disruption: "ChatGPT (Nov 2022) reached 100 million users in two months — faster than any technology in history. Large language models began automating knowledge work: writing, coding, legal research, financial analysis, and now hiring itself.",
+    panic: "Writers, coders, lawyers, radiologists — knowledge workers of every kind now face what manual workers faced in 1810. AI-generated resumes flooding job boards. Interview fraud. Ghost jobs. A labor market that was already structurally broken is now harder to read than ever.",
+    panicDur: "Still in progress — estimated 5–15 years",
+    progress: "Unknown. Optimists cite Jevons Paradox — efficiency creates demand. Pessimists note the horse never got a new job. The honest answer: we are inside the panic period right now. Every other entry on this timeline resolved. This one hasn't.",
+    progressDur: "New normal: unknown",
+    analogy: "This is the one we're living. The pattern holds: new technology, fear of loss, resistance, eventual adaptation. What's different this time may be speed, scope, or the question of whether the new economy that emerges actually has room for most people in it."
+  }
+];
+
+const Y1 = 1750, Y2 = 2044;
+const CHART_H = 480;
+const AXIS_PCT = 0.54;
+const CARD_W = 120, CARD_H = 38, GAP = 10;
+
+const chart    = document.getElementById('tlChart');
+const bg       = document.getElementById('tlBg');
+const detailEl = document.getElementById('detail');
+
+let activeIdx = null;
+
+function pct(y)     { return ((y-Y1)/(Y2-Y1)*100).toFixed(3)+'%'; }
+function wid(y1,y2) { return ((y2-y1)/(Y2-Y1)*100).toFixed(3)+'%'; }
+function yToPx(y,W) { return (y-Y1)/(Y2-Y1)*W; }
+
+events.forEach(e => {
+  const pc = document.createElement('div');
+  pc.className = 'tl-col panic';
+  pc.style.left  = pct(e.panicStart);
+  pc.style.width = wid(e.panicStart, e.panicEnd);
+  bg.appendChild(pc);
+});
+
+function openDetail(i) {
+  const e = events[i];
+  activeIdx = i;
+
+  chart.querySelectorAll('.tl-card').forEach((c,ci) => c.classList.toggle('active', ci===i));
+  chart.querySelectorAll('.tl-dot').forEach((d,di)  => d.classList.toggle('active', di===i));
+
+  const isUnknown = !e.normalStart;
+
+  detailEl.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <div class="detail-year">${e.year}</div>
+        <div class="detail-title">${e.title}</div>
+        <div class="detail-subtitle">${e.short}</div>
+      </div>
+      <div class="detail-close" id="detailClose">[ close ]</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <h4 class="h4-disruption">The disruption</h4>
+        <p>${e.disruption}</p>
+      </div>
+      <div class="detail-section">
+        <h4 class="h4-panic">The panic</h4>
+        <p>${e.panic}</p>
+        <div class="detail-tag panic-tag">${e.panicDur}</div>
+      </div>
+      <div class="detail-section">
+        <h4 class="h4-progress">What followed</h4>
+        <p>${e.progress}</p>
+        <div class="detail-tag ${isUnknown ? 'unknown-tag' : 'unknown-tag'}">${e.progressDur}</div>
+      </div>
+    </div>
+    <div class="detail-analogy">
+      <h4>The AI analogy</h4>
+      <p>${e.analogy}</p>
+    </div>
+  `;
+  detailEl.classList.add('open');
+  document.getElementById('detailClose').addEventListener('click', closeDetail);
+  detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeDetail() {
+  detailEl.classList.remove('open');
+  chart.querySelectorAll('.tl-card,.tl-dot').forEach(el => el.classList.remove('active'));
+  activeIdx = null;
+}
+
+function render() {
+  chart.querySelectorAll('.tl-dot,.tl-card,.tl-connector,.tl-year,.tl-axis').forEach(el => el.remove());
+
+  const W = chart.offsetWidth || 960;
+  const axisTop = Math.round(CHART_H * AXIS_PCT);
+
+  const axis = document.createElement('div');
+  axis.className = 'tl-axis';
+  axis.style.top = axisTop + 'px';
+  chart.appendChild(axis);
+
+  const above = [], below = [];
+  const HALF   = CARD_W / 2 + 6;
+  const SLOT_H = CARD_H + GAP;
+
+  function peekSlot(pool, cx) {
+    for (let s = 0; s < 8; s++) {
+      if (!pool[s] || !pool[s].some(ox => Math.abs(cx-ox) < HALF*2)) return s;
+    }
+    return pool.length;
+  }
+  function claimSlot(pool, cx) {
+    const s = peekSlot(pool, cx);
+    if (!pool[s]) pool[s] = [];
+    pool[s].push(cx);
+    return s;
+  }
+
+  events.forEach((e, i) => {
+    const cx    = yToPx(e.year, W);
+    const aSlot = peekSlot(above, cx);
+    const bSlot = peekSlot(below, cx);
+    const side  = aSlot <= bSlot ? 'above' : 'below';
+    const slot  = claimSlot(side === 'above' ? above : below, cx);
+
+    const dot = document.createElement('div');
+    dot.className = 'tl-dot' + (i === activeIdx ? ' active' : '');
+    dot.style.left = pct(e.year);
+    dot.style.top  = axisTop + 'px';
+    dot.addEventListener('click', () => openDetail(i));
+    chart.appendChild(dot);
+
+    const distFromAxis = GAP + slot * SLOT_H;
+    let cardTop = side === 'above'
+      ? axisTop - distFromAxis - CARD_H - 6
+      : axisTop + distFromAxis + 14;
+    cardTop = Math.max(2, Math.min(CHART_H - CARD_H - 2, cardTop));
+
+    const card = document.createElement('div');
+    card.className = 'tl-card' + (i === activeIdx ? ' active' : '');
+    card.style.left = pct(e.year);
+    card.style.top  = cardTop + 'px';
+    card.innerHTML  = `<div class="tl-card-title">${e.title}</div>`;
+    card.addEventListener('click', () => openDetail(i));
+    chart.appendChild(card);
+
+    const conn = document.createElement('div');
+    conn.className  = 'tl-connector';
+    conn.style.left = pct(e.year);
+    if (side === 'above') {
+      conn.style.top    = (cardTop + CARD_H) + 'px';
+      conn.style.height = Math.max(2, axisTop - cardTop - CARD_H) + 'px';
+    } else {
+      conn.style.top    = (axisTop + 13) + 'px';
+      conn.style.height = Math.max(2, cardTop - axisTop - 13) + 'px';
+    }
+    chart.appendChild(conn);
+  });
+
+  [1500,1600,1700,1800,1900,1950,2000,2025].forEach(y => {
+    const t = document.createElement('div');
+    t.className   = 'tl-year';
+    t.style.left  = pct(y);
+    t.style.top   = (axisTop + 18) + 'px';
+    t.textContent = y;
+    chart.appendChild(t);
+  });
+}
+
+function toggleFullscreen() {
+  const btn = document.getElementById('fsBtn');
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    btn.textContent = '✕ Exit fullscreen';
+  } else {
+    document.exitFullscreen();
+    btn.textContent = '⛶ Fullscreen';
+  }
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fsBtn');
+  if (!document.fullscreenElement) btn.textContent = '⛶ Fullscreen';
+});
+
+render();
+window.addEventListener('resize', () => {
+  render();
+  if (activeIdx !== null) openDetail(activeIdx);
+});
+</script>
+</body>
+</html>
