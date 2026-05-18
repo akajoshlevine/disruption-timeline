@@ -30,51 +30,30 @@
     min-height: 100vh;
   }
 
-  /* ── Fullscreen toggle ── */
-  .fs-btn {
-    position: fixed;
-    top: 16px;
-    right: 20px;
-    z-index: 1000;
-    background: var(--navy);
-    color: rgba(255,255,255,0.6);
-    border: none;
-    font-family: 'Sofia Sans', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 7px 14px;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .fs-btn:hover { color: var(--white); background: var(--magenta); }
-
   /* ── Header ── */
   header {
     background: var(--white);
-    padding: 52px 72px 40px;
+    padding: 48px 60px 36px;
     border-bottom: 2px solid var(--navy);
   }
 
   .eyebrow {
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--magenta);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   h1 {
     font-family: 'Sofia Sans', sans-serif;
-    font-size: clamp(40px, 5.5vw, 68px);
-    line-height: 0.95;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.0;
     font-weight: 700;
     color: var(--navy);
-    max-width: 720px;
+    max-width: 680px;
   }
 
   h1 em {
@@ -83,18 +62,18 @@
   }
 
   .subtitle {
-    margin-top: 18px;
-    font-size: 16px;
+    margin-top: 14px;
+    font-size: 15px;
     color: var(--muted);
     font-weight: 300;
-    max-width: 600px;
+    max-width: 560px;
     line-height: 1.65;
   }
 
   .legend {
     display: flex;
     gap: 28px;
-    margin-top: 26px;
+    margin-top: 24px;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -124,14 +103,14 @@
 
   /* ── Timeline ── */
   .tl-outer {
-    padding: 44px 72px 0;
+    padding: 40px 60px 0;
     overflow-x: auto;
     background: var(--white);
   }
 
   .tl-scroll { min-width: 960px; position: relative; }
 
-  .tl-chart { position: relative; height: 480px; }
+  .tl-chart { position: relative; height: 420px; }
 
   .tl-bg { position: absolute; inset: 0; pointer-events: none; }
 
@@ -152,15 +131,15 @@
   .tl-dot {
     position: absolute;
     transform: translate(-50%, 50%);
-    width: 14px; height: 14px;
+    width: 12px; height: 12px;
     border-radius: 50%;
     background: var(--navy);
-    border: 3px solid var(--white);
+    border: 2.5px solid var(--white);
     z-index: 10;
     cursor: pointer;
     transition: transform 0.18s;
   }
-  .tl-dot:hover { transform: translate(-50%, 50%) scale(1.5); }
+  .tl-dot:hover { transform: translate(-50%, 50%) scale(1.45); }
   .tl-dot.active {
     background: var(--magenta);
     border-color: var(--white);
@@ -169,11 +148,11 @@
   .tl-card {
     position: absolute;
     transform: translateX(-50%);
-    width: 120px;
+    width: 112px;
     background: var(--white);
     border: 1px solid var(--rule);
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 7px 10px;
     z-index: 8;
     cursor: pointer;
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -190,7 +169,7 @@
   }
   .tl-card-title {
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--navy);
     line-height: 1.25;
@@ -207,7 +186,7 @@
   .tl-year {
     position: absolute;
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.1em;
     color: var(--muted);
@@ -216,7 +195,7 @@
 
   /* ── Detail Panel ── */
   .detail {
-    margin: 0 72px;
+    margin: 0 60px;
     border: 2px solid var(--navy);
     background: var(--white);
     display: none;
@@ -231,7 +210,7 @@
 
   .detail-header {
     background: var(--navy);
-    padding: 28px 36px 24px;
+    padding: 24px 32px 22px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -242,7 +221,7 @@
 
   .detail-year {
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -252,14 +231,14 @@
 
   .detail-title {
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--white);
     line-height: 1.05;
   }
 
   .detail-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     color: rgba(255,255,255,0.55);
     font-weight: 300;
     margin-top: 5px;
@@ -286,7 +265,7 @@
   }
 
   .detail-section {
-    padding: 26px 30px;
+    padding: 24px 28px;
     border-right: 1px solid var(--rule);
   }
   .detail-section:last-child { border-right: none; }
@@ -307,28 +286,28 @@
   .h4-progress   { color: var(--muted);   border-color: var(--rule); }
 
   .detail-section p {
-    font-size: 14px;
-    line-height: 1.75;
+    font-size: 13px;
+    line-height: 1.72;
     color: var(--muted);
     font-weight: 300;
   }
 
   .detail-tag {
     display: inline-block;
-    margin-top: 12px;
+    margin-top: 10px;
     font-family: 'Sofia Sans', sans-serif;
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    padding: 3px 9px;
+    padding: 3px 8px;
     border-radius: 2px;
   }
   .panic-tag   { background: var(--magenta); color: white; }
   .unknown-tag { background: var(--navy);    color: white; }
 
   .detail-analogy {
-    padding: 22px 30px;
+    padding: 20px 28px;
     background: #f0f4f8;
     border-top: 1px solid var(--rule);
   }
@@ -347,8 +326,8 @@
   }
 
   .detail-analogy p {
-    font-size: 14px;
-    line-height: 1.75;
+    font-size: 13px;
+    line-height: 1.72;
     color: var(--muted);
     font-weight: 300;
     font-style: italic;
@@ -358,12 +337,12 @@
   footer {
     background: var(--navy);
     margin-top: 0;
-    padding: 18px 72px;
+    padding: 16px 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -375,12 +354,12 @@
   .instruction {
     text-align: center;
     font-family: 'Sofia Sans', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
-    padding: 14px 72px 22px;
+    padding: 14px 60px 20px;
     background: var(--white);
   }
 
@@ -394,8 +373,6 @@
 </style>
 </head>
 <body>
-
-<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
 
 <header>
   <div class="eyebrow">The Job Sh*t Show ⋅ Research</div>
@@ -433,28 +410,64 @@
 <script>
 const events = [
   {
+    year: 1440,
+    title: "Printing Press",
+    short: "Gutenberg's movable type",
+    panicStart: 1440, panicEnd: 1520,
+    disruption: "Gutenberg's movable type made scribes economically obsolete and broke the Church's monopoly on the written word. Within decades, books went from rare luxury objects to mass commodity.",
+    panic: "Scribes' guilds across Europe smashed presses and threatened printers. The Church and secular authorities moved to suppress, censor, and burn banned books. Governments feared the democratization of ideas — correctly.",
+    panicDur: "~80 years of active resistance",
+    progress: "Mass literacy, the Scientific Revolution, the Protestant Reformation, and ultimately the Enlightenment. New jobs: printers, publishers, booksellers, editors. Knowledge shifted from institutions to individuals.",
+    progressDur: "New normal by ~1550",
+    analogy: "AI democratizes knowledge production the way print democratized knowledge distribution. The scribes who smashed presses are today's knowledge workers resisting AI tools — and they were right that their world was ending."
+  },
+  {
+    year: 1657,
+    title: "Mechanical Clock",
+    short: "Huygens' pendulum clock",
+    panicStart: 1657, panicEnd: 1700,
+    disruption: "Christiaan Huygens' pendulum clock (1657) made timekeeping accurate enough to impose schedules on work, commerce, and daily life. For the first time, an employer could measure not just what a worker produced but how long it took.",
+    panic: "Clergy argued that only God should measure time — that mechanical clocks imposed a false, commercial order on divine creation. Communities resisted the public clock tower as an instrument of control. The anxiety wasn't about the clock itself but about who owned the time it measured.",
+    panicDur: "~40 years of philosophical and religious resistance",
+    progress: "The clock made the factory possible. Shift work, the lunch break, the workday, overtime — none of these concepts exist without accurate timekeeping. Punctuality became a moral virtue. 'Wasted time' became a sin. The entire modern conception of productivity flows from this.",
+    progressDur: "New normal by ~1700",
+    analogy: "The deepest disruptions don't just change what work gets done — they change how work is measured and controlled. AI is doing to cognitive output what the clock did to physical time: making it legible, trackable, and therefore manageable by someone other than the worker."
+  },
+  {
+    year: 1712,
+    title: "Steam Engine",
+    short: "Newcomen's atmospheric engine",
+    panicStart: 1712, panicEnd: 1760,
+    disruption: "Thomas Newcomen's atmospheric engine (1712), improved dramatically by James Watt (1769), replaced animal and human muscle with mechanical power. It made mining deeper, manufacturing faster, and eventually made the Spinning Jenny and the railroad possible.",
+    panic: "Mine workers feared displacement. Millwrights and skilled craftsmen who maintained water-powered machinery saw their expertise made obsolete. The deeper fear: a machine that could do the work of dozens of horses — and didn't tire, didn't eat, didn't organize.",
+    panicDur: "~50 years of resistance and displacement",
+    progress: "The steam engine is the root node of the Industrial Revolution. Everything that follows — textiles, railroads, steel, ships — runs on it. It multiplied human productive capacity by orders of magnitude and restructured where people lived, how they worked, and what nations could build.",
+    progressDur: "New normal by ~1800",
+    analogy: "Every era has a general-purpose technology that makes everything else possible. Steam was that for the 1700s. Electricity for the 1900s. The internet for the 1990s. AI may be that technology now — not a tool for one industry but the engine underneath all of them."
+  },
+  {
     year: 1764,
     title: "Spinning Jenny",
     short: "Industrial textile machinery",
     panicStart: 1764, panicEnd: 1820,
-    disruption: "James Hargreaves' Spinning Jenny — and the broader mechanization of textile production — collapsed the cottage industry that had employed millions of British hand-spinners and weavers.",
+    disruption: "James Hargreaves' Spinning Jenny, and the broader mechanization of textile production, collapsed the cottage industry that had employed millions of British hand-spinners and weavers.",
     panic: "The Luddite movement (1811–1816) was the most organized anti-technology resistance in history. Workers broke into mills and destroyed machinery. The British government deployed more troops against Luddites than against Napoleon at the time.",
-    panicDur: "~60 years of resistance; Luddite peak 1811–1816",
-    progress: "The factory system created entirely new categories of work. Britain's textile output grew 50x. Urban industrial economies replaced agrarian ones. Child labor laws, unions, and labor rights followed — eventually.",
+    panicDur: "~60 years",
+    progress: "The factory system created entirely new categories of work. Britain's textile output grew 50x. Urban industrial economies replaced agrarian ones. Child labor laws, unions, and labor rights followed...eventually.",
     progressDur: "New normal by ~1840",
-    analogy: "'Luddite' became a slur. But the Luddites weren't anti-technology — they were pro-worker. The debate today about AI and jobs is the same argument with different vocabulary. And the same people lose in the short run."
+    analogy: "'Luddite' became a slur. But the Luddites weren't anti-technology, they were pro-worker. The debate today about AI and jobs is the same argument with different vocabulary. And the same people lose in the short run."
   },
   {
     year: 1839,
     title: "Photography",
     short: "Daguerre's public announcement",
     panicStart: 1839, panicEnd: 1870,
-    disruption: "On August 19, 1839, the French government released the daguerreotype process to the world for free — and within weeks, portrait studios were opening across Europe and America. A sitting that once required a painter and weeks of work could now be done in minutes for a fraction of the cost.",
-    panic: "Portrait painters and miniaturists lost their livelihoods almost overnight — one French painter called it 'the death of art.' But the panic ran deeper than economics. Philosophers and clergy debated whether photographs captured the soul. Baudelaire called it art's 'mortal enemy.' Courts wrestled with whether a photograph could be trusted as evidence.",
-    panicDur: "~30 years of craft displacement + ongoing truth anxiety",
-    progress: "Photography didn't kill art — it freed it. Painters abandoned photorealism and invented Impressionism. New professions emerged: photojournalists, portrait photographers, darkroom technicians, photo editors. The question of whether images tell the truth never fully resolved — it just became normal to live with the uncertainty.",
+    disruption: "On August 19, 1839, the French government released the daguerreotype process to the world for free, and within weeks, portrait studios were opening across Europe and America. A sitting that once required a painter and weeks of work could now be done in minutes for a fraction of the cost.",
+    panic: "Portrait painters and miniaturists lost their livelihoods almost overnight, one French painter called it 'the death of art.' But the panic ran deeper than economics. Philosophers and clergy debated whether photographs captured the soul. Baudelaire called it art's 'mortal enemy.' Courts wrestled with whether a photograph could be trusted as evidence. The anxiety wasn't just about jobs, it was about whether the machine-made image could be trusted at all.",
+    panicDur: "~30 years",
+    progress: "Photography didn't kill art, it freed it. Painters abandoned photorealism and invented Impressionism. New professions emerged: photojournalists, portrait photographers, darkroom technicians, photo editors. The question of whether images tell the truth never fully resolved, it just became normal to live with the uncertainty.",
     progressDur: "New normal by ~1870",
-    analogy: "The most direct ancestor of the AI moment. When photography removed the constraint that had defined painting — the obligation to capture reality — painters didn't disappear. They invented Impressionism, then Cubism, then Abstract Expressionism. The machine took the mimicry. What was left was more human, not less."
+    analogy: "The most direct ancestor of the AI moment. When photography removed the constraint that had defined painting — the obligation to capture reality — painters didn't disappear. They invented Impressionism, then Cubism, then Abstract Expressionism. The machine took the mimicry. What was left was more human, not less. The question for writers, coders, and designers today is whether the same liberation is coming — or whether this time the machine takes that too."
   },
   {
     year: 1829,
@@ -463,7 +476,7 @@ const events = [
     panicStart: 1829, panicEnd: 1862,
     disruption: "The first intercity passenger railway collapsed travel times from days to hours, destroyed the coaching and canal industries, and began restructuring where people could live and work.",
     panic: "Canal companies lobbied furiously against rail. Medical experts warned traveling at 30mph would cause passengers' lungs to collapse. Farmers feared cows would stop giving milk near train lines. Clergy saw it as defying God's natural order.",
-    panicDur: "~30 years of resistance and adjustment",
+    panicDur: "~30 years",
     progress: "Suburbs were born. National supply chains became possible. Agriculture industrialized. New jobs: engineers, conductors, station workers, sleeping car attendants. The railroad economy restructured entire nations.",
     progressDur: "New normal by ~1870",
     analogy: "The lung-collapse doctors were wrong on the facts but not entirely wrong about disruption. Every new infrastructure technology creates winners and losers by geography and class. The question is always who bears the cost."
@@ -473,24 +486,24 @@ const events = [
     title: "Electricity",
     short: "Grid power replaces gas lamps",
     panicStart: 1882, panicEnd: 1912,
-    disruption: "Edison's commercial electric grid (1882) made gaslight obsolete and began the electrification of industry, homes, and commerce — a transition that took nearly 50 years to complete.",
-    panic: "Gas companies lobbied to discredit electricity. Edison electrocuted animals publicly to prove AC power was dangerous. Early adopters were seen as reckless. Entire industries — gas fitting, lamp trimming, candle-making — fought the transition.",
-    panicDur: "~30 years of industry resistance",
-    progress: "The companies that won weren't the ones that replaced gas lamps with electric ones — they were the ones that redesigned their entire operations around electric power. Productivity exploded. Factory layouts, work shifts, and retail hours all changed.",
+    disruption: "Edison's commercial electric grid (1882) made gaslight obsolete and began the electrification of industry, homes, and commerce—a transition that took nearly 50 years to complete.",
+    panic: "Gas companies lobbied to discredit electricity. Edison electrocuted animals publicly to prove AC power was dangerous. Early adopters were seen as reckless. Entire industries—gas fitting, lamp trimming, candle-making—fought the transition.",
+    panicDur: "~30 years",
+    progress: "The companies that won weren't the ones that replaced gas lamps with electric ones; they were the ones that redesigned their entire operations around electric power. Productivity exploded. Factory layouts, work shifts, and retail hours all changed.",
     progressDur: "New normal by ~1930",
-    analogy: "Andrew Ng's 'AI is the new electricity' framing lives here. The real lesson: electrification took 50 years to fully restructure the economy. AI timelines may compress that — or may not. The restructuring, not the technology, is what takes time."
+    analogy: "Andrew Ng wrote 'AI is the new electricity'. The real lesson: electrification took 50 years to fully restructure the economy. AI timelines may compress that, but it is the restructuring, not the technology, that takes time."
   },
   {
     year: 1913,
     title: "Assembly Line",
     short: "Ford's moving assembly line",
     panicStart: 1913, panicEnd: 1940,
-    disruption: "Ford's assembly line destroyed artisan manufacturing and replaced it with repetitive, deskilled labor — while simultaneously making products affordable to the workers who made them.",
-    panic: "Craft unions fought deskilling bitterly. The speed of the line caused physical and psychological breakdown — Chaplin's Modern Times captured the dehumanization. Early auto plants had 300–400% annual worker turnover. The $5 workday was Ford's response to that crisis.",
-    panicDur: "~25 years of labor conflict",
+    disruption: "Ford's assembly line destroyed artisan manufacturing and replaced it with repetitive, deskilled labor, while simultaneously making products affordable to the workers who made them.",
+    panic: "Craft unions fought deskilling bitterly. The speed of the line caused physical and psychological breakdown; Chaplin's Modern Times captured the dehumanization. Early auto plants had 300–400% annual worker turnover. The $5 workday was Ford's response to that crisis.",
+    panicDur: "~25 years",
     progress: "The $5 workday created the American middle class. Mass consumption became the engine of the economy. New industries: auto repair, gas stations, road construction, motels, suburbs. More people employed than before, but doing very different work.",
     progressDur: "New normal by ~1950",
-    analogy: "The horse didn't adapt to the car. Coachmakers didn't either. But the jobs that replaced them employed more people for several decades. The question is always: who bears the transition cost, how long does it last, and does the new economy actually include you?"
+    analogy: "The horse didn't adapt to the car. Coach-makers didn't either. But the jobs that replaced them employed more people for several decades. The question is always: who bears the transition cost, how long does it last, and does the new economy actually include you?"
   },
   {
     year: 1950,
@@ -499,56 +512,56 @@ const events = [
     panicStart: 1950, panicEnd: 1980,
     disruption: "ENIAC (1945) began the computing era. IBM mainframes in the 1950s–60s began automating clerical and accounting work at scale. The personal computer (1977) brought computation to individuals.",
     panic: "Labor unions feared mass white-collar unemployment. The term 'automation anxiety' entered the mainstream in the 1960s. Congressional hearings were held. A presidential commission was formed. Norbert Wiener warned of machines displacing human cognition decades before it happened.",
-    panicDur: "~30 years of anxiety; peaked in 1960s",
-    progress: "Clerical jobs shrank but knowledge worker jobs exploded. IT departments, software engineers, database administrators, systems analysts — none of these job categories existed before. The information economy was born. Jevons Paradox in action: efficiency created demand.",
+    panicDur: "~30 years",
+    progress: "Clerical jobs shrank but knowledge worker jobs exploded. IT departments, software engineers, database administrators, systems analysts—none of these job categories existed before. The information economy was born. Jevons Paradox in action: efficiency created demand.",
     progressDur: "New normal by ~1985",
-    analogy: "The VisiCalc / spreadsheet story lives here. Computers didn't eliminate accountants — they created demand for financial analysis that had been unaffordable before. Whether AI follows the same pattern is the central question of the next decade."
+    analogy: "Computers and spreadsheets didn't eliminate accountants, they created demand for financial analysis that had been unaffordable before. Whether AI follows the same pattern is the central question of the next decade."
   },
   {
     year: 1994,
     title: "The Internet",
     short: "World Wide Web goes public",
     panicStart: 1994, panicEnd: 2005,
-    disruption: "The public web (1991–1994) destroyed entire industries — newspapers, travel agents, video rental, record stores, classified advertising — while creating new ones at scale. It was the most compressed disruption in the pre-AI era.",
+    disruption: "The public web (1991–1994) destroyed entire industries—newspapers, travel agents, video rental, record stores, classified advertising—while creating new ones at scale. It was the most compressed disruption in the pre-AI era.",
     panic: "The dotcom bubble (1995–2001) and crash. Newspapers declared they would never give away content for free, then did. The music industry sued Napster. Retailers ignored e-commerce until Amazon proved the model. Panic took the form of denial as much as resistance.",
-    panicDur: "~10 years including bubble and bust",
-    progress: "E-commerce, social media, streaming, the gig economy, cloud computing, smartphones. New jobs dwarfed old ones by count — but not always by wages, benefits, or stability. The internet created enormous value and distributed very little of it.",
+    panicDur: "~10 years",
+    progress: "E-commerce, social media, streaming, the gig economy, cloud computing, smartphones. New jobs dwarfed old ones by count, but not always by wages, benefits, or stability. The internet created enormous value and distributed very little of it.",
     progressDur: "New normal by ~2010",
-    analogy: "The internet is the most direct predecessor to AI's disruption. Same pattern: breathless optimism, speculative bubble, crash, then quiet restructuring that actually changed everything. The crash is what everyone remembers. The restructuring is what matters."
+    analogy: "The internet is the most direct predecessor to AI's disruption. Same pattern: breathless optimism, speculative bubble, crash, then restructuring that actually changed everything. The crash is what everyone remembers. The restructuring is what mattered."
   },
   {
     year: 2007,
     title: "Smartphone",
     short: "iPhone and the mobile era",
     panicStart: 2007, panicEnd: 2015,
-    disruption: "The iPhone (2007) collapsed point-and-shoot cameras, GPS devices, MP3 players, alarm clocks, watches, and newspapers into a single device — and created the app economy and the gig economy in the same stroke.",
+    disruption: "The iPhone (2007) collapsed point-and-shoot cameras, GPS devices, MP3 players, alarm clocks, watches, and newspapers into a single device, and then created the app economy and the gig economy in the same stroke.",
     panic: "Nokia and BlackBerry dismissed touchscreens as gimmicks. Taxi and hotel industries ignored Uber and Airbnb until they were disrupted. Retail missed mobile commerce. The mental health and attention economy harms emerged years after adoption, not before.",
-    panicDur: "~8 years of industry denial and disruption",
-    progress: "The app economy created millions of jobs. Platform businesses scaled globally at near-zero marginal cost. But gig work replaced employment. The Uberification of labor — flexibility as cover for removing benefits, predictable income, and worker protections — began here.",
+    panicDur: "~8 years",
+    progress: "The app economy created millions of jobs. Platform businesses scaled globally at near-zero marginal cost. But gig work replaced employment. The Uberification of labor—flexibility as cover for removing benefits, predictable income, and worker protections—began here.",
     progressDur: "New normal by ~2018",
-    analogy: "Hank Wethington's Uberification argument: what sounds like freedom — the portfolio career, the flexible schedule — is actually a race to the bottom. No benefits, unpredictable income, assets you own depreciating while you work. AI is accelerating that model into white-collar work."
+    analogy: "What sounds like freedom (the portfolio career, the flexible schedule) is actually a race to the bottom. No benefits, unpredictable income, assets you own depreciating while you work. Will AI accelerate that model into white-collar work?"
   },
   {
     year: 2022,
     title: "Generative AI",
     short: "ChatGPT and the LLM era",
-    panicStart: 2022, panicEnd: 2032,
-    disruption: "ChatGPT (Nov 2022) reached 100 million users in two months — faster than any technology in history. Large language models began automating knowledge work: writing, coding, legal research, financial analysis, and now hiring itself.",
+    panicStart: 2022, panicEnd: 2037,
+    disruption: "ChatGPT (Nov 2022) reached 100 million users in two months, faster than any technology in history. Large language models began automating knowledge work: writing, coding, legal research, financial analysis, and now hiring itself.",
     panic: "Writers, coders, lawyers, radiologists — knowledge workers of every kind now face what manual workers faced in 1810. AI-generated resumes flooding job boards. Interview fraud. Ghost jobs. A labor market that was already structurally broken is now harder to read than ever.",
-    panicDur: "Still in progress — estimated 5–15 years",
-    progress: "Unknown. Optimists cite Jevons Paradox — efficiency creates demand. Pessimists note the horse never got a new job. The honest answer: we are inside the panic period right now. Every other entry on this timeline resolved. This one hasn't.",
+    panicDur: "5–15 years estimated",
+    progress: "Optimists cite Jevons Paradox where efficiency creates demand. Pessimists note the horse never got a new job. We are in The Panic.",
     progressDur: "New normal: unknown",
-    analogy: "This is the one we're living. The pattern holds: new technology, fear of loss, resistance, eventual adaptation. What's different this time may be speed, scope, or the question of whether the new economy that emerges actually has room for most people in it."
+    analogy: "New technology, fear of loss, resistance, eventual adaptation—will we see the pattern hold? What's different this time may be speed, scope, and the question of how severe the transition to the new economy will be."
   }
 ];
 
-const Y1 = 1750, Y2 = 2044;
-const CHART_H = 480;
+const Y1 = 1400, Y2 = 2044;
+const CHART_H = 420;
 const AXIS_PCT = 0.54;
-const CARD_W = 120, CARD_H = 38, GAP = 10;
+const CARD_W = 112, CARD_H = 36, GAP = 10;
 
-const chart    = document.getElementById('tlChart');
-const bg       = document.getElementById('tlBg');
+const chart  = document.getElementById('tlChart');
+const bg     = document.getElementById('tlBg');
 const detailEl = document.getElementById('detail');
 
 let activeIdx = null;
@@ -557,6 +570,7 @@ function pct(y)     { return ((y-Y1)/(Y2-Y1)*100).toFixed(3)+'%'; }
 function wid(y1,y2) { return ((y2-y1)/(Y2-Y1)*100).toFixed(3)+'%'; }
 function yToPx(y,W) { return (y-Y1)/(Y2-Y1)*W; }
 
+// Panic columns only — no green
 events.forEach(e => {
   const pc = document.createElement('div');
   pc.className = 'tl-col panic';
@@ -650,6 +664,7 @@ function render() {
     const side  = aSlot <= bSlot ? 'above' : 'below';
     const slot  = claimSlot(side === 'above' ? above : below, cx);
 
+    // Dot
     const dot = document.createElement('div');
     dot.className = 'tl-dot' + (i === activeIdx ? ' active' : '');
     dot.style.left = pct(e.year);
@@ -657,6 +672,7 @@ function render() {
     dot.addEventListener('click', () => openDetail(i));
     chart.appendChild(dot);
 
+    // Card
     const distFromAxis = GAP + slot * SLOT_H;
     let cardTop = side === 'above'
       ? axisTop - distFromAxis - CARD_H - 6
@@ -671,6 +687,7 @@ function render() {
     card.addEventListener('click', () => openDetail(i));
     chart.appendChild(card);
 
+    // Connector
     const conn = document.createElement('div');
     conn.className  = 'tl-connector';
     conn.style.left = pct(e.year);
@@ -684,31 +701,16 @@ function render() {
     chart.appendChild(conn);
   });
 
-  [1500,1600,1700,1800,1900,1950,2000,2025].forEach(y => {
+  // Year ticks
+  [1500,1600,1700,1800,1900,2000,2025].forEach(y => {
     const t = document.createElement('div');
     t.className   = 'tl-year';
     t.style.left  = pct(y);
-    t.style.top   = (axisTop + 18) + 'px';
+    t.style.top   = (axisTop + 16) + 'px';
     t.textContent = y;
     chart.appendChild(t);
   });
 }
-
-function toggleFullscreen() {
-  const btn = document.getElementById('fsBtn');
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-    btn.textContent = '✕ Exit fullscreen';
-  } else {
-    document.exitFullscreen();
-    btn.textContent = '⛶ Fullscreen';
-  }
-}
-
-document.addEventListener('fullscreenchange', () => {
-  const btn = document.getElementById('fsBtn');
-  if (!document.fullscreenElement) btn.textContent = '⛶ Fullscreen';
-});
 
 render();
 window.addEventListener('resize', () => {
