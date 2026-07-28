@@ -3,7 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Panic and the Progress</title>
+<title>Choose Your Own Precedent</title>
+<meta name="description" content="Twelve technologies that arrived and three forecasts that didn't. What people feared, how they resisted, how long it took, and which parts turn out to be folklore.">
+<link rel="canonical" href="https://akajoshlevine.github.io/disruption-timeline/">
+
+<!-- Open Graph / Substack + social link previews -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Job Sh*t Show">
+<meta property="og:url" content="https://akajoshlevine.github.io/disruption-timeline/">
+<meta property="og:title" content="Choose Your Own Precedent">
+<meta property="og:description" content="Twelve technologies that arrived and three forecasts that didn't. Pick the one that suits your argument, then notice that you did.">
+<meta property="og:image" content="https://akajoshlevine.github.io/disruption-timeline/og-image.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="A timeline of fifteen technology disruptions from 1355 to 2022, with three forecasts that never happened marked in blue.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Choose Your Own Precedent">
+<meta name="twitter:description" content="Twelve technologies that arrived and three forecasts that didn't. Pick the one that suits your argument, then notice that you did.">
+<meta name="twitter:image" content="https://akajoshlevine.github.io/disruption-timeline/og-image.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300;400;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
@@ -491,8 +510,8 @@
 
 <header>
   <div class="eyebrow">The Job Sh*t Show ⋅ Research</div>
-  <h1>The <em>Panic</em> +<br>the Progress</h1>
-  <p class="subtitle">Twelve technologies that arrived, and three forecasts that did not. What people feared, how they resisted, how long it took, and which parts of the story turn out to be folklore.</p>
+  <h1>Choose Your Own<br><em>Precedent</em></h1>
+  <p class="subtitle">Twelve technologies that arrived and three forecasts that did not. What people feared, how they resisted, how long it took, and which parts of the story turn out to be folklore. Pick the one that suits your argument, then notice that you did.</p>
   <div class="legend">
     <div class="legend-item">
       <div class="l-swatch" style="background:var(--panic-fill); border:1px solid var(--panic-border);"></div>
@@ -871,19 +890,11 @@ function render() {
   renderBands();
 
   const W = chart.offsetWidth || 1560;
-  const axisTop = Math.round(CHART_H * AXIS_PCT);
-
-  const axis = document.createElement('div');
-  axis.className = 'tl-axis';
-  axis.style.top = axisTop + 'px';
-  chart.appendChild(axis);
-
   const above = [], below = [];
-  const HALF   = CARD_W / 2 + 6;
-  const SLOT_H = CARD_H + GAP;
+  const HALF  = CARD_W / 2 + 6;
 
   function peekSlot(pool, cx) {
-    for (let s = 0; s < 10; s++) {
+    for (let s = 0; s < 12; s++) {
       if (!pool[s] || !pool[s].some(ox => Math.abs(cx-ox) < HALF*2)) return s;
     }
     return pool.length;
@@ -895,6 +906,10 @@ function render() {
     return s;
   }
 
+  // Pass 1. Build every card, assign a side and slot, and measure real height.
+  // Counterexample cards wrap to two lines and carry a flag, so they are
+  // materially taller than the plain ones. A fixed slot height collides them.
+  const placed = [];
   visibleEvents().forEach(({e, i}) => {
     const isCounter = e.kind === 'counter';
     const cx    = yToPx(e.year, W);
@@ -903,36 +918,71 @@ function render() {
     const side  = aSlot <= bSlot ? 'above' : 'below';
     const slot  = claimSlot(side === 'above' ? above : below, cx);
 
-    const dot = document.createElement('div');
-    dot.className = 'tl-dot' + (isCounter ? ' counter' : '') + (i === activeIdx ? ' active' : '');
-    dot.dataset.idx = i;
-    dot.style.left = pct(e.year);
-    dot.style.top  = axisTop + 'px';
-    dot.addEventListener('click', () => openDetail(i));
-    chart.appendChild(dot);
-
-    const distFromAxis = GAP + slot * SLOT_H;
-    let cardTop = side === 'above'
-      ? axisTop - distFromAxis - CARD_H - 6
-      : axisTop + distFromAxis + 14;
-    cardTop = Math.max(2, Math.min(CHART_H - CARD_H - 2, cardTop));
-
     const card = document.createElement('div');
     card.className = 'tl-card' + (isCounter ? ' counter' : '') + (i === activeIdx ? ' active' : '');
     card.dataset.idx = i;
     card.style.left = pct(e.year);
-    card.style.top  = cardTop + 'px';
+    card.style.top  = '0px';
+    card.style.visibility = 'hidden';
     card.innerHTML  = `<div class="tl-card-title">${e.title}</div>` +
                       (isCounter ? `<div class="tl-card-flag">Did not happen</div>` : '');
     card.addEventListener('click', () => openDetail(i));
     chart.appendChild(card);
 
+    placed.push({ e, i, cx, side, slot, card, isCounter, h: 0 });
+  });
+
+  // Pass 2. Tallest card in each slot sets that slot's height.
+  const slotH = { above: [], below: [] };
+  placed.forEach(p => {
+    p.h = p.card.offsetHeight || CARD_H;
+    slotH[p.side][p.slot] = Math.max(slotH[p.side][p.slot] || 0, p.h);
+  });
+
+  const offset = { above: [], below: [] };
+  let needAbove = GAP, needBelow = GAP;
+  ['above','below'].forEach(side => {
+    let acc = GAP;
+    const len = slotH[side].length;
+    for (let s = 0; s < len; s++) {
+      offset[side][s] = acc;
+      acc += (slotH[side][s] || CARD_H) + GAP;
+    }
+    if (side === 'above') needAbove = acc; else needBelow = acc;
+  });
+
+  // Pass 3. Size the chart to the content instead of clamping cards into it.
+  const axisTop = Math.round(needAbove + 24);
+  const totalH  = Math.max(CHART_H, axisTop + needBelow + 40);
+  chart.style.height = totalH + 'px';
+
+  const axis = document.createElement('div');
+  axis.className = 'tl-axis';
+  axis.style.top = axisTop + 'px';
+  chart.appendChild(axis);
+
+  placed.forEach(p => {
+    const cardTop = p.side === 'above'
+      ? axisTop - offset[p.side][p.slot] - p.h - 6
+      : axisTop + offset[p.side][p.slot] + 14;
+
+    p.card.style.top = cardTop + 'px';
+    p.card.style.visibility = 'visible';
+
+    const dot = document.createElement('div');
+    dot.className = 'tl-dot' + (p.isCounter ? ' counter' : '') + (p.i === activeIdx ? ' active' : '');
+    dot.dataset.idx = p.i;
+    dot.style.left = pct(p.e.year);
+    dot.style.top  = axisTop + 'px';
+    dot.addEventListener('click', () => openDetail(p.i));
+    chart.appendChild(dot);
+
     const conn = document.createElement('div');
-    conn.className  = 'tl-connector' + (isCounter ? ' counter' : '');
-    conn.style.left = pct(e.year);
-    if (side === 'above') {
-      conn.style.top    = (cardTop + CARD_H) + 'px';
-      conn.style.height = Math.max(2, axisTop - cardTop - CARD_H) + 'px';
+    conn.className  = 'tl-connector' + (p.isCounter ? ' counter' : '');
+    conn.style.left = pct(p.e.year);
+    if (p.side === 'above') {
+      conn.style.top    = (cardTop + p.h) + 'px';
+      conn.style.height = Math.max(2, axisTop - cardTop - p.h) + 'px';
     } else {
       conn.style.top    = (axisTop + 13) + 'px';
       conn.style.height = Math.max(2, cardTop - axisTop - 13) + 'px';
